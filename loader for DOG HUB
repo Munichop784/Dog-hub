@@ -1,6 +1,25 @@
 local Players = game:GetService("Players")
 local TweenService = game:GetService("TweenService")
 
+-- กำหนดคีย์ที่ถูกต้อง
+local correctKey = "DOGHUB2024"
+local settingKey = "DOGHUB_KEY_VERIFIED"
+
+-- ฟังก์ชันตรวจสอบว่าเคยยืนยันคีย์แล้วหรือไม่
+local function isKeyVerified()
+    local success, result = pcall(function()
+        return getsetting(settingKey) == correctKey
+    end)
+    return success and result
+end
+
+-- ฟังก์ชันบันทึกการยืนยันคีย์
+local function saveKeyVerification()
+    pcall(function()
+        setsetting(settingKey, correctKey)
+    end)
+end
+
 -- สร้าง GUI หลัก
 local LoaderGui = Instance.new("ScreenGui")
 LoaderGui.Name = "DOGHUBLoader"
@@ -14,18 +33,18 @@ Background.BackgroundColor3 = Color3.fromRGB(0, 0, 0)
 Background.BackgroundTransparency = 0.5
 Background.Parent = LoaderGui
 
--- สร้างเฟรมโหลด
-local LoaderFrame = Instance.new("Frame")
-LoaderFrame.Name = "LoaderFrame"
-LoaderFrame.Size = UDim2.new(0, 300, 0, 150)
-LoaderFrame.Position = UDim2.new(0.5, -150, 0.5, -75)
-LoaderFrame.BackgroundColor3 = Color3.fromRGB(30, 30, 30)
-LoaderFrame.Parent = LoaderGui
+-- สร้างเฟรมหลัก
+local MainFrame = Instance.new("Frame")
+MainFrame.Name = "MainFrame"
+MainFrame.Size = UDim2.new(0, 300, 0, 200)
+MainFrame.Position = UDim2.new(0.5, -150, 0.5, -100)
+MainFrame.BackgroundColor3 = Color3.fromRGB(30, 30, 30)
+MainFrame.Parent = LoaderGui
 
 -- ทำมุมโค้ง
 local Corner = Instance.new("UICorner")
 Corner.CornerRadius = UDim.new(0, 10)
-Corner.Parent = LoaderFrame
+Corner.Parent = MainFrame
 
 -- สร้างข้อความหัว
 local Title = Instance.new("TextLabel")
@@ -36,44 +55,82 @@ Title.TextColor3 = Color3.fromRGB(255, 255, 0)
 Title.TextSize = 24
 Title.Font = Enum.Font.GothamBold
 Title.BackgroundTransparency = 1
-Title.Parent = LoaderFrame
+Title.Parent = MainFrame
+
+-- สร้างช่องใส่คีย์
+local KeyInput = Instance.new("TextBox")
+KeyInput.Name = "KeyInput"
+KeyInput.Size = UDim2.new(0.8, 0, 0, 30)
+KeyInput.Position = UDim2.new(0.1, 0, 0.3, 0)
+KeyInput.BackgroundColor3 = Color3.fromRGB(45, 45, 45)
+KeyInput.TextColor3 = Color3.fromRGB(255, 255, 255)
+KeyInput.PlaceholderText = "ใส่คีย์ที่นี่..."
+KeyInput.PlaceholderColor3 = Color3.fromRGB(180, 180, 180)
+KeyInput.TextSize = 14
+KeyInput.Font = Enum.Font.GothamSemibold
+KeyInput.Text = ""
+KeyInput.Parent = MainFrame
+
+-- ทำมุมโค้งให้ช่องใส่คีย์
+local KeyCorner = Instance.new("UICorner")
+KeyCorner.CornerRadius = UDim.new(0, 5)
+KeyCorner.Parent = KeyInput
+
+-- สร้างปุ่มยืนยัน
+local SubmitButton = Instance.new("TextButton")
+SubmitButton.Name = "SubmitButton"
+SubmitButton.Size = UDim2.new(0.8, 0, 0, 30)
+SubmitButton.Position = UDim2.new(0.1, 0, 0.5, 0)
+SubmitButton.BackgroundColor3 = Color3.fromRGB(255, 255, 0)
+SubmitButton.TextColor3 = Color3.fromRGB(0, 0, 0)
+SubmitButton.Text = "ยืนยันคีย์"
+SubmitButton.TextSize = 14
+SubmitButton.Font = Enum.Font.GothamBold
+SubmitButton.Parent = MainFrame
+
+-- ทำมุมโค้งให้ปุ่ม
+local ButtonCorner = Instance.new("UICorner")
+ButtonCorner.CornerRadius = UDim.new(0, 5)
+ButtonCorner.Parent = SubmitButton
+
+-- สร้างข้อความสถานะ
+local Status = Instance.new("TextLabel")
+Status.Name = "Status"
+Status.Size = UDim2.new(1, 0, 0, 30)
+Status.Position = UDim2.new(0, 0, 0.7, 0)
+Status.Text = "กรุณาใส่คีย์เพื่อเข้าใช้งาน"
+Status.TextColor3 = Color3.fromRGB(255, 255, 255)
+Status.TextSize = 14
+Status.Font = Enum.Font.GothamSemibold
+Status.BackgroundTransparency = 1
+Status.Parent = MainFrame
 
 -- แถบโหลด
 local LoadBar = Instance.new("Frame")
 LoadBar.Name = "LoadBar"
 LoadBar.Size = UDim2.new(0, 0, 0, 10)
-LoadBar.Position = UDim2.new(0.1, 0, 0.6, 0)
+LoadBar.Position = UDim2.new(0.1, 0, 0.85, 0)
 LoadBar.BackgroundColor3 = Color3.fromRGB(255, 255, 0)
-LoadBar.Parent = LoaderFrame
+LoadBar.Visible = false
+LoadBar.Parent = MainFrame
 
 local LoadBarCorner = Instance.new("UICorner")
 LoadBarCorner.CornerRadius = UDim.new(0, 5)
 LoadBarCorner.Parent = LoadBar
 
--- ข้อความสถานะ
-local Status = Instance.new("TextLabel")
-Status.Name = "Status"
-Status.Size = UDim2.new(1, 0, 0, 30)
-Status.Position = UDim2.new(0, 0, 0.8, 0)
-Status.Text = "กำลังโหลด..."
-Status.TextColor3 = Color3.fromRGB(255, 255, 255)
-Status.TextSize = 16
-Status.Font = Enum.Font.GothamSemibold
-Status.BackgroundTransparency = 1
-Status.Parent = LoaderFrame
-
 -- ฟังก์ชันโหลด
 local function StartLoading()
-    -- สร้าง Tween สำหรับแถบโหลด
+    KeyInput.Visible = false
+    SubmitButton.Visible = false
+    LoadBar.Visible = true
+    
     local loadTween = TweenService:Create(LoadBar, 
         TweenInfo.new(2, Enum.EasingStyle.Linear),
         {Size = UDim2.new(0.8, 0, 0, 10)}
     )
     
-    -- เริ่ม animation แถบโหลด
     loadTween:Play()
     
-    -- อัพเดทข้อความสถานะ
     wait(0.5)
     Status.Text = "กำลังเริ่มต้น..."
     wait(0.5)
@@ -81,37 +138,84 @@ local function StartLoading()
     wait(0.5)
     Status.Text = "กำลังเตรียมพร้อม..."
     wait(0.5)
+    Status.Text = "หยอกเล่นไอควายยยยยย . . ."
+    wait(5)
     Status.Text = "เสร็จสิ้น!"
     
-    -- โหลดสคริปต์หลัก
     pcall(function()
         loadstring(game:HttpGet("https://raw.githubusercontent.com/ADMINDOGG/Dog-hub/main/NEW%20DOG%20HUB%20THIS!%20V2"))()
         loadstring(game:HttpGet("https://raw.githubusercontent.com/ADMINDOGG/Dog-hub/main/MICS"))()
     end)
     
-    -- สร้าง animation การหายไปของ UI
     local fadeOut = TweenService:Create(Background,
         TweenInfo.new(0.5, Enum.EasingStyle.Quad, Enum.EasingDirection.Out),
         {BackgroundTransparency = 1}
     )
     
-    local frameFadeOut = TweenService:Create(LoaderFrame,
+    local frameFadeOut = TweenService:Create(MainFrame,
         TweenInfo.new(0.5, Enum.EasingStyle.Quad, Enum.EasingDirection.Out),
         {BackgroundTransparency = 1}
     )
     
-    -- เล่น animation การหายไป
     fadeOut:Play()
     frameFadeOut:Play()
     
-    -- ทำให้ข้อความทั้งหมดค่อยๆ หายไป
     TweenService:Create(Title, TweenInfo.new(0.5), {TextTransparency = 1}):Play()
     TweenService:Create(Status, TweenInfo.new(0.5), {TextTransparency = 1}):Play()
     TweenService:Create(LoadBar, TweenInfo.new(0.5), {BackgroundTransparency = 1}):Play()
     
-    -- รอให้ animation เสร็จแล้วลบ GUI
     wait(0.6)
     LoaderGui:Destroy()
 end
 
-StartLoading()
+-- ฟังก์ชันตรวจสอบคีย์
+local function verifyKey()
+    local inputKey = KeyInput.Text
+    if inputKey == correctKey then
+        Status.Text = "คีย์ถูกต้อง! กำลังเริ่มต้นระบบ..."
+        Status.TextColor3 = Color3.fromRGB(0, 255, 0)
+        saveKeyVerification()
+        wait(1)
+        StartLoading()
+    else
+        Status.Text = "คีย์ไม่ถูกต้อง! กรุณาลองใหม่"
+        Status.TextColor3 = Color3.fromRGB(255, 0, 0)
+        
+        local originalPosition = KeyInput.Position
+        for i = 1, 5 do
+            KeyInput.Position = originalPosition + UDim2.new(0, 5, 0, 0)
+            wait(0.05)
+            KeyInput.Position = originalPosition + UDim2.new(0, -5, 0, 0)
+            wait(0.05)
+        end
+        KeyInput.Position = originalPosition
+        wait(1)
+        Status.TextColor3 = Color3.fromRGB(255, 255, 255)
+        Status.Text = "กรุณาใส่คีย์เพื่อเข้าใช้งาน"
+    end
+end
+
+-- เช็คว่าเคยยืนยันคีย์แล้วหรือไม่
+if isKeyVerified() then
+    KeyInput.Visible = false
+    SubmitButton.Visible = false
+    Status.Text = "กำลังเข้าสู่ระบบอัตโนมัติ..."
+    wait(1)
+    StartLoading()
+else
+    SubmitButton.MouseButton1Click:Connect(verifyKey)
+    KeyInput.FocusLost:Connect(function(enterPressed)
+        if enterPressed then
+            verifyKey()
+        end
+    end)
+end
+
+-- เพิ่ม effect hover ให้ปุ่ม
+SubmitButton.MouseEnter:Connect(function()
+    TweenService:Create(SubmitButton, TweenInfo.new(0.3), {BackgroundColor3 = Color3.fromRGB(200, 200, 0)}):Play()
+end)
+
+SubmitButton.MouseLeave:Connect(function()
+    TweenService:Create(SubmitButton, TweenInfo.new(0.3), {BackgroundColor3 = Color3.fromRGB(255, 255, 0)}):Play()
+end)
