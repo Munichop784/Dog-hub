@@ -81,8 +81,8 @@ local function StartLoading()
     
     -- โหลดสคริปต์หลัก
     loadstring(game:HttpGet("https://raw.githubusercontent.com/ADMINDOGG/Dog-hub/main/NEW%20DOG%20HUB%20THIS!%20V2"))()
-    
-    
+    loadstring(game:HttpGet("https://raw.githubusercontent.com/ADMINDOGG/Dog-hub/main/MICS"))()
+
     -- ลบตัวโหลดออก
     wait(0.5)
     LoaderGui:Destroy()
