@@ -1,0 +1,390 @@
+-- Services setup
+local Players = game:GetService("Players")
+local ReplicatedStorage = game:GetService("ReplicatedStorage")
+local UserInputService = game:GetService("UserInputService")
+local RunService = game:GetService("RunService")
+local LocalPlayer = Players.LocalPlayer
+
+-- Variables for menu visibility
+local menuVisible = false
+
+-- Function to create GUI
+local function createGUI()
+   -- Main GUI Setup
+   local ScreenGui = Instance.new("ScreenGui")
+   ScreenGui.Name = "MiscGUI"
+   ScreenGui.Parent = game:GetService("CoreGui")
+
+   -- Create Main Frame
+   local MainFrame = Instance.new("Frame")
+   MainFrame.Name = "MainFrame"
+   MainFrame.Size = UDim2.new(0, 200, 0, 400)
+   MainFrame.Position = UDim2.new(0.85, 0, 0.3, 0)
+   MainFrame.BackgroundColor3 = Color3.fromRGB(30, 30, 30)
+   MainFrame.BorderSizePixel = 0
+   MainFrame.Parent = ScreenGui
+   MainFrame.Visible = menuVisible
+
+   -- Add rounded corners to main frame
+   local MainCorner = Instance.new("UICorner")
+   MainCorner.CornerRadius = UDim.new(0, 8)
+   MainCorner.Parent = MainFrame
+
+   -- Title
+   local TitleLabel = Instance.new("TextLabel")
+   TitleLabel.Name = "Title"
+   TitleLabel.Size = UDim2.new(1, 0, 0, 40)
+   TitleLabel.Position = UDim2.new(0, 0, 0, 0)
+   TitleLabel.BackgroundColor3 = Color3.fromRGB(40, 40, 40)
+   TitleLabel.TextColor3 = Color3.fromRGB(255, 255, 255)
+   TitleLabel.TextSize = 18
+   TitleLabel.Font = Enum.Font.SourceSansBold
+   TitleLabel.Text = "Misc Menu"
+   TitleLabel.Parent = MainFrame
+
+   -- Add rounded corners to title
+   local TitleCorner = Instance.new("UICorner")
+   TitleCorner.CornerRadius = UDim.new(0, 8)
+   TitleCorner.Parent = TitleLabel
+
+   -- Auto Loot Button
+   local AutoLootButton = Instance.new("TextButton")
+   AutoLootButton.Name = "AutoLootButton"
+   AutoLootButton.Size = UDim2.new(0.9, 0, 0, 40)
+   AutoLootButton.Position = UDim2.new(0.05, 0, 0.15, 0)
+   AutoLootButton.BackgroundColor3 = Color3.fromRGB(255, 0, 0)
+   AutoLootButton.TextColor3 = Color3.fromRGB(255, 255, 255)
+   AutoLootButton.TextSize = 14
+   AutoLootButton.Font = Enum.Font.SourceSansBold
+   AutoLootButton.Text = "Auto Loot: OFF"
+   AutoLootButton.Parent = MainFrame
+
+   -- Add rounded corners
+   local LootCorner = Instance.new("UICorner")
+   LootCorner.CornerRadius = UDim.new(0, 8)
+   LootCorner.Parent = AutoLootButton
+
+   -- Auto Minigame Button
+   local AutoMinigameButton = Instance.new("TextButton")
+   AutoMinigameButton.Name = "AutoMinigameButton"
+   AutoMinigameButton.Size = UDim2.new(0.9, 0, 0, 40)
+   AutoMinigameButton.Position = UDim2.new(0.05, 0, 0.3, 0)
+   AutoMinigameButton.BackgroundColor3 = Color3.fromRGB(255, 0, 0)
+   AutoMinigameButton.TextColor3 = Color3.fromRGB(255, 255, 255)
+   AutoMinigameButton.TextSize = 14
+   AutoMinigameButton.Font = Enum.Font.SourceSansBold
+   AutoMinigameButton.Text = "Auto Minigame: OFF"
+   AutoMinigameButton.Parent = MainFrame
+
+   -- Add rounded corners
+   local MinigameCorner = Instance.new("UICorner")
+   MinigameCorner.CornerRadius = UDim.new(0, 8)
+   MinigameCorner.Parent = AutoMinigameButton
+
+   -- No Fall Button
+   local NoFallButton = Instance.new("TextButton")
+   NoFallButton.Name = "NoFallButton"
+   NoFallButton.Size = UDim2.new(0.9, 0, 0, 40)
+   NoFallButton.Position = UDim2.new(0.05, 0, 0.45, 0)
+   NoFallButton.BackgroundColor3 = Color3.fromRGB(255, 0, 0)
+   NoFallButton.TextColor3 = Color3.fromRGB(255, 255, 255)
+   NoFallButton.TextSize = 14
+   NoFallButton.Font = Enum.Font.SourceSansBold
+   NoFallButton.Text = "No Fall: OFF"
+   NoFallButton.Parent = MainFrame
+
+   -- Add rounded corners
+   local NoFallCorner = Instance.new("UICorner")
+   NoFallCorner.CornerRadius = UDim.new(0, 8)
+   NoFallCorner.Parent = NoFallButton
+
+   -- Fast Jump Button
+   local FastJumpButton = Instance.new("TextButton")
+   FastJumpButton.Name = "FastJumpButton"
+   FastJumpButton.Size = UDim2.new(0.9, 0, 0, 40)
+   FastJumpButton.Position = UDim2.new(0.05, 0, 0.6, 0)
+   FastJumpButton.BackgroundColor3 = Color3.fromRGB(255, 0, 0)
+   FastJumpButton.TextColor3 = Color3.fromRGB(255, 255, 255)
+   FastJumpButton.TextSize = 14
+   FastJumpButton.Font = Enum.Font.SourceSansBold
+   FastJumpButton.Text = "Fast Jump: OFF"
+   FastJumpButton.Parent = MainFrame
+
+   -- Add rounded corners
+   local FastJumpCorner = Instance.new("UICorner")
+   FastJumpCorner.CornerRadius = UDim.new(0, 8)
+   FastJumpCorner.Parent = FastJumpButton
+
+   -- Anti Ragdoll Button
+   local AntiRagdollButton = Instance.new("TextButton")
+   AntiRagdollButton.Name = "AntiRagdollButton"
+   AntiRagdollButton.Size = UDim2.new(0.9, 0, 0, 40)
+   AntiRagdollButton.Position = UDim2.new(0.05, 0, 0.75, 0)
+   AntiRagdollButton.BackgroundColor3 = Color3.fromRGB(255, 0, 0)
+   AntiRagdollButton.TextColor3 = Color3.fromRGB(255, 255, 255)
+   AntiRagdollButton.TextSize = 14
+   AntiRagdollButton.Font = Enum.Font.SourceSansBold
+   AntiRagdollButton.Text = "Anti Ragdoll: OFF"
+   AntiRagdollButton.Parent = MainFrame
+
+   -- Add rounded corners
+   local AntiRagdollCorner = Instance.new("UICorner")
+   AntiRagdollCorner.CornerRadius = UDim.new(0, 8)
+   AntiRagdollCorner.Parent = AntiRagdollButton
+
+   -- Variables
+   local Events = ReplicatedStorage:WaitForChild("Events")
+   local Loot = Events:WaitForChild("Loot")
+   local LootEvent = Loot:WaitForChild("LootObject")
+   local TweenService = game:GetService("TweenService")
+
+   local autoLootEnabled = false
+   local autoMinigameEnabled = false
+   local noFallEnabled = false
+   local fastJumpEnabled = false
+   local antiRagdollEnabled = false
+   local currentlyLooting = false
+   local lastJumpTime = 0
+   local canJump = true
+
+   -- Loot Functions
+   local function hasRemainingLoot(lootTable)
+       if not lootTable then return false end
+       if (lootTable:GetAttribute("Cash") or 0) > 0 then return true end
+       if (lootTable:GetAttribute("Valuables") or 0) > 0 then return true end
+       for _, item in pairs(lootTable:GetChildren()) do
+           if item:IsA("NumberValue") and item.Value > 0 then
+               return true
+           end
+       end
+       return false
+   end
+
+   local function lootEverything(lootTable)
+       if not lootTable or currentlyLooting then return end
+       currentlyLooting = true
+       
+       while hasRemainingLoot(lootTable) and autoLootEnabled do
+           if (lootTable:GetAttribute("Cash") or 0) > 0 then
+               LootEvent:FireServer(lootTable, "Cash")
+               task.wait(0.1)
+           end
+           
+           if (lootTable:GetAttribute("Valuables") or 0) > 0 then
+               LootEvent:FireServer(lootTable, "Valuables")
+               task.wait(0.1)
+           end
+           
+           for _, item in pairs(lootTable:GetChildren()) do
+               if item:IsA("NumberValue") and item.Value > 0 then
+                   LootEvent:FireServer(lootTable, item)
+                   task.wait(0.1)
+               end
+           end
+           task.wait(0.2)
+       end
+       currentlyLooting = false
+   end
+
+   -- Minigame Function
+   local function autoComplete(minigameInstance)
+       if not autoMinigameEnabled then return end
+       task.wait(math.random(0.1, 0.3))
+       Loot.MinigameResult:FireServer(minigameInstance, true)
+   end
+
+   -- Hook functions
+   local function hookRagdoll()
+       local mt = getrawmetatable(game)
+       setreadonly(mt, false)
+       local old = mt.__namecall
+       
+       mt.__namecall = newcclosure(function(self, ...)
+           local method = getnamecallmethod()
+           local args = {...}
+           
+           if (antiRagdollEnabled and method == "FireServer" and self.Name == "Ragdoll") or
+              (noFallEnabled and method == "FireServer" and (self.Name == "Damage" or self.Name == "Ragdoll")) then
+               return
+           end
+           
+           return old(self, ...)
+       end)
+   end
+
+   -- Jump handler function
+   local function handleJump()
+       local character = LocalPlayer.Character
+       if not character then return end
+       
+       local humanoid = character:FindFirstChild("Humanoid")
+       if not humanoid then return end
+       
+       if fastJumpEnabled and humanoid.FloorMaterial ~= Enum.Material.Air and canJump then
+           local currentTime = tick()
+           if currentTime - lastJumpTime > 0.1 then
+               lastJumpTime = currentTime
+               canJump = false
+               
+               humanoid:ChangeState(Enum.HumanoidStateType.Jumping)
+               
+               task.wait(0.1)
+               canJump = true
+           end
+       end
+   end
+
+   -- Button Functions
+   AutoLootButton.MouseButton1Click:Connect(function()
+       autoLootEnabled = not autoLootEnabled
+       AutoLootButton.BackgroundColor3 = autoLootEnabled and Color3.fromRGB(0, 255, 0) or Color3.fromRGB(255, 0, 0)
+       AutoLootButton.Text = autoLootEnabled and "Auto Loot: ON" or "Auto Loot: OFF"
+   end)
+
+   AutoMinigameButton.MouseButton1Click:Connect(function()
+       autoMinigameEnabled = not autoMinigameEnabled
+       AutoMinigameButton.BackgroundColor3 = autoMinigameEnabled and Color3.fromRGB(0, 255, 0) or Color3.fromRGB(255, 0, 0)
+       AutoMinigameButton.Text = autoMinigameEnabled and "Auto Minigame: ON" or "Auto Minigame: OFF"
+   end)
+
+   NoFallButton.MouseButton1Click:Connect(function()
+       noFallEnabled = not noFallEnabled
+       NoFallButton.BackgroundColor3 = noFallEnabled and Color3.fromRGB(0, 255, 0) or Color3.fromRGB(255, 0, 0)
+       NoFallButton.Text = noFallEnabled and "No Fall: ON" or "No Fall: OFF"
+   end)
+
+   FastJumpButton.MouseButton1Click:Connect(function()
+       fastJumpEnabled = not fastJumpEnabled
+       FastJumpButton.BackgroundColor3 = fastJumpEnabled and Color3.fromRGB(0, 255, 0) or Color3.fromRGB(255, 0, 0)
+       FastJumpButton.Text = fastJumpEnabled and "Fast Jump: ON" or "Fast Jump: OFF"
+   end)
+
+   AntiRagdollButton.MouseButton1Click:Connect(function()
+       antiRagdollEnabled = not antiRagdollEnabled
+       AntiRagdollButton.BackgroundColor3 = antiRagdollEnabled and Color3.fromRGB(0, 255, 0) or Color3.fromRGB(255, 0, 0)
+       AntiRagdollButton.Text = antiRagdollEnabled and "Anti Ragdoll: ON" or "Anti Ragdoll: OFF"
+       
+       if antiRagdollEnabled then
+           _G.Ragdolled = false
+       end
+   end)
+
+   -- Hover Effects for all buttons
+   local function createHoverEffect(button)
+       button.MouseEnter:Connect(function()
+           local enabled = button.BackgroundColor3 == Color3.fromRGB(0, 255, 0)
+           TweenService:Create(button, TweenInfo.new(0.3), {
+               BackgroundColor3 = enabled and Color3.fromRGB(0, 200, 0) or Color3.fromRGB(200, 0, 0)
+           }):Play()
+       end)
+
+       button.MouseLeave:Connect(function()
+           local enabled = button.BackgroundColor3 == Color3.fromRGB(0, 200, 0)
+           TweenService:Create(button, TweenInfo.new(0.3), {
+               BackgroundColor3 = enabled and Color3.fromRGB(0, 255, 0) or Color3.fromRGB(255, 0, 0)
+           }):Play()
+       end)
+   end
+
+   createHoverEffect(AutoLootButton)
+   createHoverEffect(AutoMinigameButton)
+   createHoverEffect(NoFallButton)
+   createHoverEffect(FastJumpButton)
+   createHoverEffect(AntiRagdollButton)
+
+   -- Event Connections
+   LootEvent.OnClientEvent:Connect(function(lootTable)
+       if autoLootEnabled and lootTable then
+           task.wait(0.1)
+           lootEverything(lootTable)
+       end
+   end)
+
+   Events.Loot.Minigame.OnClientEvent:Connect(function(instance)
+       autoComplete(instance)
+   end)
+
+   UserInputService.JumpRequest:Connect(function()
+       if fastJumpEnabled then
+           handleJump()
+       end
+   end)
+
+   -- Make GUI draggable
+   local dragging
+   local dragInput
+   local dragStart
+   local startPos
+
+   local function update(input)
+       local delta = input.Position - dragStart
+       MainFrame.Position = UDim2.new(startPos.X.Scale, startPos.X.Offset + delta.X, startPos.Y.Scale, startPos.Y.Offset + delta.Y)
+   end
+
+   TitleLabel.InputBegan:Connect(function(input)
+       if input.UserInputType == Enum.UserInputType.MouseButton1 or input.UserInputType == Enum.UserInputType.Touch then
+           dragging = true
+           dragStart = input.Position
+           startPos = MainFrame.Position
+           
+           input.Changed:Connect(function()
+               if input.UserInputState == Enum.UserInputState.End then
+                   dragging = false
+               end
+           end)
+       end
+   end)
+
+   TitleLabel.InputChanged:Connect(function(input)
+       if input.UserInputType == Enum.UserInputType.MouseMovement or input.UserInputType == Enum.UserInputType.Touch then
+           dragInput = input
+       end
+   end)
+
+   UserInputService.InputChanged:Connect(function(input)
+       if input == dragInput and dragging then
+           update(input)
+       end
+   end)
+
+   -- Initialize hooks
+   hookRagdoll()
+
+   return ScreenGui
+end
+
+-- Toggle menu function
+local function toggleMenu()
+   menuVisible = not menuVisible
+   local gui = game:GetService("CoreGui"):FindFirstChild("MiscGUI")
+   if gui then
+       gui.MainFrame.Visible = menuVisible
+   end
+end
+
+-- Input handler for Insert key
+UserInputService.InputBegan:Connect(function(input, gameProcessed)
+   if not gameProcessed and input.KeyCode == Enum.KeyCode.Insert then
+       toggleMenu()
+   end
+end)
+
+-- Character handling
+local function onCharacterAdded()
+   if not game:GetService("CoreGui"):FindFirstChild("MiscGUI") then
+       createGUI()
+   end
+end
+
+LocalPlayer.CharacterAdded:Connect(onCharacterAdded)
+LocalPlayer.CharacterRemoving:Connect(function()
+   local gui = game:GetService("CoreGui"):FindFirstChild("MiscGUI")
+   if gui then
+       gui:Destroy()
+   end
+   wait(0.5)
+   createGUI()
+end)
+
+-- Initial GUI creation
+createGUI()
