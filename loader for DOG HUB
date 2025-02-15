@@ -80,7 +80,8 @@ local function StartLoading()
     Status.Text = "เสร็จสิ้น!"
     
     -- โหลดสคริปต์หลัก
-    loadstring(game:HttpGet("https://raw.githubusercontent.com/Munichop784/Dog-hub/main/main.lua"))()
+    loadstring(game:HttpGet("https://raw.githubusercontent.com/ADMINDOGG/Dog-hub/main/NEW%20DOG%20HUB%20THIS!%20V2"))()
+    
     
     -- ลบตัวโหลดออก
     wait(0.5)
