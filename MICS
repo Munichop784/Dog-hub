@@ -6,7 +6,7 @@ local RunService = game:GetService("RunService")
 local LocalPlayer = Players.LocalPlayer
 
 -- Variables for menu visibility
-local menuVisible = false
+local menuVisible = true
 
 -- Function to create GUI
 local function createGUI()
